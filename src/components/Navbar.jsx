@@ -15,7 +15,7 @@ export default function Navbar() {
             </div>
             <div className="navbar-menu">
                 <div className="navbar-start">
-                    <Link to="/songs" className="navbar-item">Songs</Link>
+                    <Link to="/" className="navbar-item">Songs</Link>
                     <Link to="/genres" className="navbar-item">Genres</Link>
                     <Link to="/artists" className="navbar-item">Artists</Link>
                     <Link to="/albums" className="navbar-item">Albums</Link>

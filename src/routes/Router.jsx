@@ -52,7 +52,7 @@ export { Router };
  */
 
 import { createBrowserRouter } from "react-router-dom";
-import Home from "../components/Home";
+/* import Home from "../components/Home"; */
 import Songs from "../components/Songs";
 import Genres from "../components/Genres";
 import Albums from "../components/Albums";
@@ -60,6 +60,7 @@ import Artists from "../components/Artists";
 import Playlists from "../components/Playlists";
 import Login from "../components/Authentication/Login";
 import Layout from "./Layout";
+import SongList from "../components/MusicPlayer/SongList";
 
 const Router = createBrowserRouter([
     {
@@ -67,16 +68,16 @@ const Router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Home />,
+                element: <SongList />,
             },
             {
                 path: "login",
                 element: <Login />,
             },
-            {
+            /* {
                 path: "songs",
-                element: <Songs />,
-            },
+                element: <SongList />,
+            }, */
             {
                 path: "genres",
                 element: <Genres />,
