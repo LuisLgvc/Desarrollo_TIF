@@ -1,7 +1,13 @@
-export default function Home() {
+import React from 'react';
+import SongList from './MusicPlayer/SongList';
+
+function Home() {
     return (
         <div>
-           <h1>H O M E</h1>
+            <h1>Bienvenido a la página principal</h1>
+            <SongList />
         </div>
     );
 }
+
+export default Home;
