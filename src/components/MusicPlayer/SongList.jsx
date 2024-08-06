@@ -18,7 +18,6 @@ function SongList() {
         let query = new URLSearchParams({
             page: page,
             page_size: 15,
-            /* ordering: `-created_at`, */
             ...filters,
         }).toString();
 
@@ -67,10 +66,6 @@ function SongList() {
         setPage(1);
     }
 
-    function loadMoreSongs() {
-        setPage((prevPage) => prevPage + 1);
-    }
-
     const handleSongClick = (song) => {
         setSelectedSong(song);
         setIsModalOpen(true);
@@ -81,8 +76,12 @@ function SongList() {
         setSelectedSong(null);
     };
 
+    function loadMoreSongs() {
+        setPage((prevPage) => prevPage + 1);
+    }
+
     return (
-        <div>
+        <div style={{ margin: '20px' }}>
             <form onSubmit={handleSearch}>
                 {/* Implementación del formulario de búsqueda */}
             </form>
