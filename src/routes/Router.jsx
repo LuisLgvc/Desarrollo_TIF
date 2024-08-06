@@ -80,7 +80,7 @@ const Router = createBrowserRouter([
             }, */
             {
                 path: "genres",
-                element: <Genres />,
+                element: <Login />,
             },
             {
                 path: "albums",
