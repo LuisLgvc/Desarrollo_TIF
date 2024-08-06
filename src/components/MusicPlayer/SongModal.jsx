@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { Modal, Box, Typography, IconButton, TextField, Button } from '@mui/material';
+import React from 'react';
+import { Modal, Box, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const style = {
     position: 'absolute',
@@ -12,40 +11,12 @@ const style = {
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 4,
-    borderRadius: '10px',
-    border: '2px solid #000',
+    borderRadius: '10px', // Ejemplo de estilo personalizado
+    border: '2px solid #000', // Ejemplo de estilo personalizado
 };
 
-function SongEditModal({ open, handleClose, song, onSave }) {
-    const [formData, setFormData] = useState({
-        title: song?.title || '',
-        artist: song?.artist || '',
-        year: song?.year || '',
-        duration: song?.duration || '',
-    });
-    const [songFile, setSongFile] = useState(null);
-
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
-    const handleFileChange = (event) => {
-        setSongFile(event.target.files[0]);
-    };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const newForm = new FormData();
-        newForm.append('title', formData.title);
-        newForm.append('artist', formData.artist);
-        newForm.append('year', formData.year);
-        newForm.append('duration', formData.duration);
-        if (songFile) {
-            newForm.append('song_file', songFile);
-        }
-        onSave(newForm);
-    };
+function SongModal({ open, handleClose, song }) {
+    if (!song) return null;
 
     return (
         <Modal open={open} onClose={handleClose}>
@@ -63,60 +34,26 @@ function SongEditModal({ open, handleClose, song, onSave }) {
                     <CloseIcon />
                 </IconButton>
                 <Typography variant="h6" component="h2">
-                    Editar Canción
+                    {song.title}
                 </Typography>
-                <form onSubmit={handleSubmit}>
-                    <TextField
-                        label="Título"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleInputChange}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Artista"
-                        name="artist"
-                        value={formData.artist}
-                        onChange={handleInputChange}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Año"
-                        name="year"
-                        value={formData.year}
-                        onChange={handleInputChange}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Duración"
-                        name="duration"
-                        value={formData.duration}
-                        onChange={handleInputChange}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <input
-                        className="input"
-                        type="file"
-                        accept="image/*"
-                        
-                    />
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        fullWidth
-                        sx={{ mt: 2 }}
-                    >
-                        Guardar
-                    </Button>
-                </form>
+                <Typography sx={{ mt: 2 }}>
+                    Artista: {song.artists.join(', ')}
+                </Typography>
+                <Typography sx={{ mt: 2 }}>
+                    Año: {song.year || 'Desconocido'}
+                </Typography>
+                <Typography sx={{ mt: 2 }}>
+                    Duración: {song.duration ? `${song.duration} segundos` : 'Desconocido'}
+                </Typography>
+                {song.song_file && (
+                    <audio controls style={{ width: '100%', marginTop: '20px' }}>
+                        <source src={song.song_file} type="audio/mpeg" />
+                        Tu navegador no soporta el elemento de audio.
+                    </audio>
+                )}
             </Box>
         </Modal>
     );
 }
 
-export default SongEditModal;
+export default SongModal;
