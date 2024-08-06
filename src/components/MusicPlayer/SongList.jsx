@@ -18,7 +18,7 @@ function SongList() {
         let query = new URLSearchParams({
             page: page,
             page_size: 15,
-            ordering: `-created_at`,
+            ordering: `created_at`,
             ...filters,
         }).toString();
 
@@ -45,33 +45,27 @@ function SongList() {
         }
     };
 
-    useEffect(() => {
-        doFetch();
-    }, [page, filters]);
+    const fetchArtistName = async (artistId) => {
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_API_BASE_URL}harmonyhub/artists/${artistId}/`
+            );
 
-    function handleSearch(event) {
-        event.preventDefault();
-
-        const searchForm = new FormData(event.target);
-
-        const newFilters = {};
-
-        searchForm.forEach((value, key) => {
-            if (value) {
-                newFilters[key] = value;
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        });
 
-        setFilters(newFilters);
-        setSongs([]);
-        setPage(1);
-    }
+            const artistData = await response.json();
+            return artistData.name;
+        } catch (error) {
+            console.error("Error fetching artist:", error);
+        }
+    };
 
-    function loadMoreSongs() {
-        setPage((prevPage) => prevPage + 1);
-    }
-
-    const handleSongClick = (song) => {
+    const handleSongClick = async (song) => {
+        const artistId = song.artists[0]; // Asumiendo que el primer ID en el array es el ID del artista principal
+        const artistName = await fetchArtistName(artistId);
+        song.artistName = artistName; // Añadir el nombre del artista a la canción
         setSelectedSong(song);
         setIsModalOpen(true);
     };
@@ -81,11 +75,12 @@ function SongList() {
         setSelectedSong(null);
     };
 
+    useEffect(() => {
+        doFetch();
+    }, [page, filters]);
+
     return (
         <div>
-            <form onSubmit={handleSearch}>
-                {/* Implementación del formulario de búsqueda */}
-            </form>
             <Grid container spacing={2}>
                 {songs.map((song, index) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} xl={2.4} key={index}>
@@ -96,7 +91,7 @@ function SongList() {
             {nextUrl && (
                 <div style={{ textAlign: "center", margin: "20px" }}>
                     <Button
-                        onClick={loadMoreSongs}
+                        onClick={() => setPage(page + 1)}
                         disabled={isLoading}
                         variant="contained"
                         color="success"

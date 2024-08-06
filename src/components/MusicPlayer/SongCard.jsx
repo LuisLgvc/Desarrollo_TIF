@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card, CardContent, Typography, CardMedia } from '@mui/material';
-import defaultImage from '../../assets/notFoundImg.png'; // Asegúrate de que la ruta sea correcta
 
 function SongCard({ song, onClick }) {
     return (
@@ -24,15 +23,16 @@ function SongCard({ song, onClick }) {
             <CardMedia
                 component="img"
                 height="150" // Mantén la altura de la imagen
-                image={defaultImage}
-                alt="default"
+                image={song.cover || '../../assets/notFoundImg.png'}
+                alt="Cover"
             />
             <CardContent sx={{ flexGrow: 1 }}>
-                <Typography variant="h5" component="div">
+                <Typography variant="h6" component="div" color="#7a7a7a">
                     {song.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="subtitle1" color="#FFFFFF">
                     {song.artist}
+                    {console.log(song.artist)}
                 </Typography>
             </CardContent>
         </Card>

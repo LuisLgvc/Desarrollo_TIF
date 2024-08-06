@@ -9,10 +9,9 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
+    border: '2px solid #000',
     boxShadow: 24,
     p: 4,
-    borderRadius: '10px', // Ejemplo de estilo personalizado
-    border: '2px solid #000', // Ejemplo de estilo personalizado
 };
 
 function SongModal({ open, handleClose, song }) {
@@ -37,7 +36,7 @@ function SongModal({ open, handleClose, song }) {
                     {song.title}
                 </Typography>
                 <Typography sx={{ mt: 2 }}>
-                    Artista: {song.artists.join(', ')}
+                    Artista: {song.artistName || 'Desconocido'}
                 </Typography>
                 <Typography sx={{ mt: 2 }}>
                     Año: {song.year || 'Desconocido'}
