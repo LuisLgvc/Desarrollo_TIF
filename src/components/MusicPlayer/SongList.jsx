@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Button } from '@mui/material';
 import SongCard from './SongCard';
 import SongModal from './SongModal';
+import SongEditModal from './ModalAddSong';
 
 function SongList() {
     const [songs, setSongs] = useState([]);
@@ -12,12 +13,14 @@ function SongList() {
     const [nextUrl, setNextUrl] = useState(null);
     const [selectedSong, setSelectedSong] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const doFetch = async () => {
         setIsLoading(true);
         let query = new URLSearchParams({
             page: page,
             page_size: 15,
+            ordering: `-created_at`,
             ...filters,
         }).toString();
 
@@ -48,23 +51,19 @@ function SongList() {
         doFetch();
     }, [page, filters]);
 
-    function handleSearch(event) {
+    const handleSearch = (event) => {
         event.preventDefault();
-
         const searchForm = new FormData(event.target);
-
         const newFilters = {};
-
         searchForm.forEach((value, key) => {
             if (value) {
                 newFilters[key] = value;
             }
         });
-
         setFilters(newFilters);
         setSongs([]);
         setPage(1);
-    }
+    };
 
     const handleSongClick = (song) => {
         setSelectedSong(song);
@@ -76,9 +75,24 @@ function SongList() {
         setSelectedSong(null);
     };
 
-    function loadMoreSongs() {
+    const handleEditSong = (song) => {
+        setSelectedSong(song);
+        setIsEditModalOpen(true);
+    };
+
+    const handleCloseEditModal = () => {
+        setIsEditModalOpen(false);
+        setSelectedSong(null);
+    };
+
+    const handleSaveSong = (updatedSong) => {
+        // Aquí puedes manejar la lógica para guardar la canción actualizada
+        console.log('Canción actualizada:', updatedSong);
+    };
+
+    const loadMoreSongs = () => {
         setPage((prevPage) => prevPage + 1);
-    }
+    };
 
     return (
         <div style={{ margin: '20px' }}>
@@ -93,20 +107,29 @@ function SongList() {
                 ))}
             </Grid>
             {nextUrl && (
-                <div style={{ textAlign: "center", margin: "20px" }}>
+                <div style={{ textAlign: "center", margin: "30px" }}>
                     <Button
                         onClick={loadMoreSongs}
                         disabled={isLoading}
                         variant="contained"
                         color="success"
                         size="large"
+                        sx={{ marginRight: '20px' }}
                     >
                         {isLoading ? "Cargando..." : "Cargar más"}
+                    </Button>
+                    <Button
+                        color="success"
+                        size="large"
+                        onClick={() => handleEditSong({})}
+                    >
+                        Agregar canción
                     </Button>
                 </div>
             )}
             {isError && <div>Error al cargar las canciones.</div>}
             <SongModal open={isModalOpen} handleClose={handleCloseModal} song={selectedSong} />
+            <SongEditModal open={isEditModalOpen} handleClose={handleCloseEditModal} song={selectedSong} onSave={handleSaveSong} />
         </div>
     );
 }

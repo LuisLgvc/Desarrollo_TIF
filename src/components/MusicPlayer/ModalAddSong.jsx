@@ -16,12 +16,12 @@ const style = {
     border: '2px solid #000',
 };
 
-function SongEditModal({ open, handleClose, song, onSave }) {
+function ModalAddSong({ open, handleClose, onSave }) {
     const [formData, setFormData] = useState({
-        title: song?.title || '',
-        artist: song?.artist || '',
-        year: song?.year || '',
-        duration: song?.duration || '',
+        title: '',
+        artist: '',
+        year: '',
+        duration: '',
     });
     const [songFile, setSongFile] = useState(null);
 
@@ -63,7 +63,7 @@ function SongEditModal({ open, handleClose, song, onSave }) {
                     <CloseIcon />
                 </IconButton>
                 <Typography variant="h6" component="h2">
-                    Editar Canción
+                    Agregar Canción
                 </Typography>
                 <form onSubmit={handleSubmit}>
                     <TextField
@@ -98,12 +98,21 @@ function SongEditModal({ open, handleClose, song, onSave }) {
                         fullWidth
                         margin="normal"
                     />
-                    <input
-                        className="input"
-                        type="file"
-                        accept="image/*"
-                        
-                    />
+                    <Button
+                        variant="contained"
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                        fullWidth
+                        sx={{ mt: 2 }}
+                    >
+                        Subir Archivo de Canción
+                        <input
+                            type="file"
+                            hidden
+                            accept="audio/*"
+                            onChange={handleFileChange}
+                        />
+                    </Button>
                     <Button
                         type="submit"
                         variant="contained"
@@ -119,4 +128,4 @@ function SongEditModal({ open, handleClose, song, onSave }) {
     );
 }
 
-export default SongEditModal;
+export default ModalAddSong;
