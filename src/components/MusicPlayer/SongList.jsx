@@ -46,19 +46,21 @@ function SongList() {
     };
 
     const fetchArtistName = async (artistId) => {
-        try {
-            const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}harmonyhub/artists/${artistId}/`
-            );
+        if (artistId) {
+            try {
+                const response = await fetch(
+                    `${import.meta.env.VITE_API_BASE_URL}harmonyhub/artists/${artistId}/`
+                );
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const artistData = await response.json();
+                return artistData.name;
+            } catch (error) {
+                console.error("Error fetching artist:", error);
             }
-
-            const artistData = await response.json();
-            return artistData.name;
-        } catch (error) {
-            console.error("Error fetching artist:", error);
         }
     };
 

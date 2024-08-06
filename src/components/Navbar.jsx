@@ -1,60 +1,60 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-/* import Link from '@mui/material/Link';*/
-import { useAuth } from '../contexts/AuthContext';
-import { IconButton, Button } from '@mui/material';
+// import React from 'react';
+// import { Link, useLocation } from 'react-router-dom';
+// import AppBar from '@mui/material/AppBar';
+// import Toolbar from '@mui/material/Toolbar';
+// /* import Link from '@mui/material/Link';*/
+// import { useAuth } from '../contexts/AuthContext';
+// import { IconButton, Button } from '@mui/material';
 
-function Navbar() {
-    const { isAuthenticated } = useAuth('state');
-    const location = useLocation();
+// function Navbar() {
+//     const { isAuthenticated } = useAuth('state');
+//     const location = useLocation();
 
-    // No mostrar el Navbar en la ruta de login
-    if (location.pathname === '/login') {
-        return null;
-    }
+//     // No mostrar el Navbar en la ruta de login
+//     if (location.pathname === '/login') {
+//         return null;
+//     }
 
-    return (
-        <AppBar position="static">
-            <Toolbar>
+//     return (
+//         <AppBar position="static">
+//             <Toolbar>
 
-                <IconButton
-                    color="inherit"
-                    size="large"
-                    /* onClick={() => setOpen(true)} // Abre el drawer */
-                    sx={{ display: { xs: "flex", sm: "flex", md: "none" } }}
-                >
-                    <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>ICONBUTTON</Link>
-                </IconButton>
-                <Link color="inherit">
-                    <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</Link>
-                </Link>
-                <Link color="inherit">
-                    <Link to="/albums" style={{ color: 'inherit', textDecoration: 'none' }}>Albums</Link>
-                </Link>
-                <Link color="inherit">
-                    <Link to="/artists" style={{ color: 'inherit', textDecoration: 'none' }}>Artists</Link>
-                </Link>
-                <Link color="inherit">
-                    <Link to="/genres" style={{ color: 'inherit', textDecoration: 'none' }}>Genres</Link>
-                </Link>
-                <Link color="inherit">
-                    <Link to="/playlists" style={{ color: 'inherit', textDecoration: 'none' }}>Playlists</Link>
-                </Link>
-                <Link color="inherit">
-                    {isAuthenticated ? (
-                        <button onClick={() => useAuth('actions').logout()} style={{ color: 'inherit', textDecoration: 'none' }}>Logout</button>
-                    ) : (
-                        <Button to="/login" style={{ color: 'inherit', textDecoration: 'none' }}>Iniciar Sesión</Button>
-                    )}
-                </Link>
-            </Toolbar>
-        </AppBar>
-    );
-}
+//                 <IconButton
+//                     color="inherit"
+//                     size="large"
+//                     /* onClick={() => setOpen(true)} // Abre el drawer */
+//                     sx={{ display: { xs: "flex", sm: "flex", md: "none" } }}
+//                 >
+//                     <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>ICONBUTTON</Link>
+//                 </IconButton>
+//                 <Link color="inherit">
+//                     <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</Link>
+//                 </Link>
+//                 <Link color="inherit">
+//                     <Link to="/albums" style={{ color: 'inherit', textDecoration: 'none' }}>Albums</Link>
+//                 </Link>
+//                 <Link color="inherit">
+//                     <Link to="/artists" style={{ color: 'inherit', textDecoration: 'none' }}>Artists</Link>
+//                 </Link>
+//                 <Link color="inherit">
+//                     <Link to="/genres" style={{ color: 'inherit', textDecoration: 'none' }}>Genres</Link>
+//                 </Link>
+//                 <Link color="inherit">
+//                     <Link to="/playlists" style={{ color: 'inherit', textDecoration: 'none' }}>Playlists</Link>
+//                 </Link>
+//                 <Link color="inherit">
+//                     {isAuthenticated ? (
+//                         <button onClick={() => useAuth('actions').logout()} style={{ color: 'inherit', textDecoration: 'none' }}>Logout</button>
+//                     ) : (
+//                         <Button to="/login" style={{ color: 'inherit', textDecoration: 'none' }}>Iniciar Sesión</Button>
+//                     )}
+//                 </Link>
+//             </Toolbar>
+//         </AppBar>
+//     );
+// }
 
-export default Navbar;
+// export default Navbar;
 
 /* 
 return (
@@ -127,3 +127,24 @@ return (
         </AppBar>
     );
 */
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { AppBar, Toolbar, Typography } from '@mui/material';
+
+function Navbar() {
+  return (
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6">
+          <Link to="/">Home</Link>
+        </Typography>
+        <Typography variant="h6">
+          <Link to="/about">About</Link>
+        </Typography>
+      </Toolbar>
+    </AppBar>
+  );
+}
+
+export default Navbar;

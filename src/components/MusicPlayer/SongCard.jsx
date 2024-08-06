@@ -30,10 +30,6 @@ function SongCard({ song, onClick }) {
                 <Typography variant="h6" component="div" color="#7a7a7a">
                     {song.title}
                 </Typography>
-                <Typography variant="subtitle1" color="#FFFFFF">
-                    {song.artist}
-                    {console.log(song.artist)}
-                </Typography>
             </CardContent>
         </Card>
     );
