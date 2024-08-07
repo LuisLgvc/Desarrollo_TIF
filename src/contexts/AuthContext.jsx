@@ -107,13 +107,13 @@ function AuthProvider({ children }) {
         login: (token) => {
             const encryptedToken = encryptToken(token);
             dispatch({ type: ACTIONS.LOGIN, payload: encryptedToken });
-            localStorage.setItem("authToken", encryptedToken);
+            localStorage.setItem("Token", encryptedToken);
             const origin = location.state?.from?.pathname || "/";
             navigate(origin);
         },
         logout: () => {
             dispatch({ type: ACTIONS.LOGOUT });
-            localStorage.removeItem("authToken");
+            localStorage.removeItem("Token");
         },
     };
 

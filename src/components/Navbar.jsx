@@ -129,19 +129,35 @@ return (
 */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { AppBar, Toolbar, Typography } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Box, Button } from '@mui/material';
 
 function Navbar() {
-  return (
-    <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6">
-          <Link to="/">Home</Link>
-        </Typography>
-      </Toolbar>
-    </AppBar>
-  );
+    const navigate = useNavigate();
+
+    const handleLoginClick = () => {
+        navigate('/login');
+    };
+
+    return (
+        <AppBar position="static">
+            <Toolbar>
+                <Typography variant="h6">
+                    <Link to="/">Home</Link>
+                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginLeft: 'auto' }}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ backgroundColor: '#1FDF64', '&:hover': { backgroundColor: '#189945' } }}
+                        onClick={handleLoginClick}
+                    >
+                        Iniciar Sesión
+                    </Button>
+                </Box>
+            </Toolbar>
+        </AppBar>
+    );
 }
 
 export default Navbar;
