@@ -139,9 +139,6 @@ function Navbar() {
         <Typography variant="h6">
           <Link to="/">Home</Link>
         </Typography>
-        <Typography variant="h6">
-          <Link to="/about">About</Link>
-        </Typography>
       </Toolbar>
     </AppBar>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Box, Typography, IconButton } from '@mui/material';
+import { Modal, Box, Typography, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 const style = {
@@ -9,13 +9,16 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
     boxShadow: 24,
     p: 4,
 };
 
 function SongModal({ open, handleClose, song }) {
     if (!song) return null;
+
+    const handlePrintTitle = () => {
+        console.log(song.id);
+    };
 
     return (
         <Modal open={open} onClose={handleClose}>
@@ -50,6 +53,15 @@ function SongModal({ open, handleClose, song }) {
                         Tu navegador no soporta el elemento de audio.
                     </audio>
                 )}
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                    <Button
+                        onClick={handlePrintTitle}
+                        variant="contained"
+                        sx={{ backgroundColor: '#1FDF64', '&:hover': { backgroundColor: '#189945' } }}
+                    >
+                        Actualizar
+                    </Button>
+                </Box>
             </Box>
         </Modal>
     );

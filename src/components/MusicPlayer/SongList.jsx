@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Button } from '@mui/material';
 import SongCard from './SongCard';
 import SongModal from './SongModal';
+import AddSongModal from './AddSongModal';
+import { useAuth } from '../../contexts/AuthContext';
 
 function SongList() {
+    const { token } = useAuth("state");
+
     const [songs, setSongs] = useState([]);
     const [page, setPage] = useState(1);
     const [filters, setFilters] = useState({});
@@ -12,13 +16,14 @@ function SongList() {
     const [nextUrl, setNextUrl] = useState(null);
     const [selectedSong, setSelectedSong] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     const doFetch = async () => {
         setIsLoading(true);
         let query = new URLSearchParams({
             page: page,
             page_size: 15,
-            ordering: `created_at`,
+            ordering: `-created_at`,
             ...filters,
         }).toString();
 
@@ -73,8 +78,38 @@ function SongList() {
     };
 
     const handleCloseModal = () => {
+        
+        console.log(token);
+        
         setIsModalOpen(false);
         setSelectedSong(null);
+    };
+
+    const handleAddSongClick = () => {
+        setIsAddModalOpen(true);
+    };
+
+    const handleCloseAddModal = () => {
+        setIsAddModalOpen(false);
+    };
+
+    const handleSaveSong = (newForm) => {
+
+        fetch(`${import.meta.env.VITE_API_BASE_URL}harmonyhub/songs/`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Token ${token}`,
+            },
+            body: newForm,
+        })
+        .then(response => response.json())
+        .then(data => {
+            setSongs([data, ...songs]);
+            handleCloseAddModal();
+        })
+        .catch(error => {
+            console.error('Error saving song:', error);
+        });
     };
 
     useEffect(() => {
@@ -82,7 +117,7 @@ function SongList() {
     }, [page, filters]);
 
     return (
-        <div>
+        <div style={{ margin: '20px' }}>
             <Grid container spacing={2}>
                 {songs.map((song, index) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} xl={2.4} key={index}>
@@ -96,8 +131,8 @@ function SongList() {
                         onClick={() => setPage(page + 1)}
                         disabled={isLoading}
                         variant="contained"
-                        color="success"
                         size="large"
+                        sx={{ backgroundColor: '#1FDF64', '&:hover': { backgroundColor: '#189945' } }}
                     >
                         {isLoading ? "Cargando..." : "Cargar más"}
                     </Button>
@@ -105,8 +140,21 @@ function SongList() {
             )}
             {isError && <div>Error al cargar las canciones.</div>}
             <SongModal open={isModalOpen} handleClose={handleCloseModal} song={selectedSong} />
+            <div style={{ textAlign: "center", marginTop: "20px" }}>
+                <Button
+                    onClick={handleAddSongClick}
+                    variant="contained"
+                    size="large"
+                    sx={{ backgroundColor: '#1FDF64', '&:hover': { backgroundColor: '#189945' } }}
+                >
+                    Agregar Canción
+                </Button>
+            </div>
+            <AddSongModal open={isAddModalOpen} handleClose={handleCloseAddModal} onSave={handleSaveSong} />
         </div>
     );
 }
 
 export default SongList;
+
+
