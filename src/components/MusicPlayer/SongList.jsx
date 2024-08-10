@@ -7,7 +7,8 @@ import AddSongModal from './AddSongModal';
 import { useAuth } from '../../contexts/AuthContext';
 
 function SongList() {
-    const { token } = useAuth("state");
+    const { token, user__id, isAuthenticated } = useAuth("state");
+
 
     const [songs, setSongs] = useState([]);
     const [page, setPage] = useState(1);
@@ -76,31 +77,34 @@ function SongList() {
             setPage((prevPage) => prevPage + 1);
         }
     };
-    
+
     const handleSongClick = async (song) => {
         const artistId = song.artists[0]; // Asumiendo que el primer ID en el array es el ID del artista principal
         const artistName = await fetchArtistName(artistId);
         song.artistName = artistName; // Añadir el nombre del artista a la canción
         setSelectedSong(song);
         setIsModalOpen(true);
-        console.log(`id ${song.id} owner: ${song.owner}`);
+        console.log(`id ${song.id} owner: ${song.owner} user__id: ${user__id}`);
     };
-    
+
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
-    
+
     const handleOpenEditModal = (song) => {
         setSelectedSong(song);
         setIsEditModalOpen(true);
     };
-    
+
     const handleCloseEditModal = () => {
         setIsEditModalOpen(false);
         setSelectedSong(null);
     };
-    
+
     const handleAddSongClick = () => {
+        const id = user__id;
+        console.log("user_id:", id);
+        console.log(token);
         setSelectedSong(null); // Limpiar la canción seleccionada al agregar una nueva
         setIsAddModalOpen(true);
     };
@@ -117,28 +121,28 @@ function SongList() {
             },
             body: newForm,
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al guardar la canción');
-            }
-            return response.json();
-        })
-        .then(data => {
-            setSongs([data, ...songs]);
-            handleCloseAddModal();
-        })
-        .catch(error => {
-            console.error('Error saving song:', error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al guardar la canción');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setSongs([data, ...songs]);
+                handleCloseAddModal();
+            })
+            .catch(error => {
+                console.error('Error saving song:', error);
+            });
     };
-    
+
     const handleUpdateSong = (updatedForm) => {
         if (!updatedForm.has('id')) {
             updatedForm.append('id', selectedSong.id);
         }
-    
+
         const songId = updatedForm.get('id');
-    
+
         fetch(`${import.meta.env.VITE_API_BASE_URL}harmonyhub/songs/${songId}/`, {
             method: 'PATCH',
             headers: {
@@ -146,21 +150,21 @@ function SongList() {
             },
             body: updatedForm,
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al actualizar la canción');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Actualiza la lista de canciones con la canción actualizada
-            const updatedSongs = songs.map(song => song.id === data.id ? data : song);
-            setSongs(updatedSongs);
-            handleCloseEditModal();
-        })
-        .catch(error => {
-            console.error('Error updating song:', error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al actualizar la canción');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Actualiza la lista de canciones con la canción actualizada
+                const updatedSongs = songs.map(song => song.id === data.id ? data : song);
+                setSongs(updatedSongs);
+                handleCloseEditModal();
+            })
+            .catch(error => {
+                console.error('Error updating song:', error);
+            });
     };
 
     useEffect(() => {
@@ -181,32 +185,33 @@ function SongList() {
                     <Button
                         onClick={handleLoadMore}
                         variant="contained"
-                        color="primary"
+                        sx={{ backgroundColor: '#1FDF64', '&:hover': { backgroundColor: '#189945' }, fontSize: '20px' }}
                     >
-                        {isLoading ? "Cargando..." : "Cargar más"}
+                        {isLoading ? "Cargando..." : "Mas Canciones"}
                     </Button>
                 </div>
             )}
-            <Button
-                onClick={handleAddSongClick}
-                variant="contained"
-                color="primary"
-                sx={{
-                    position: 'fixed',
-                    bottom: '20px',
-                    right: '20px',
-                    borderRadius: '50%',
-                    minWidth: '60px',
-                    minHeight: '60px',
-                    fontSize: '24px',
-                    backgroundColor: '#1FDF64',
-                    '&:hover': {
-                        backgroundColor: '#189945',
-                    },
-                }}
-            >
-                +
-            </Button>
+            {isAuthenticated && (
+                <Button
+                    onClick={handleAddSongClick}
+                    variant="contained"
+                    sx={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        borderRadius: '30%',
+                        minWidth: '70px',
+                        minHeight: '70px',
+                        fontSize: '35px',
+                        backgroundColor: '#1FDF64',
+                        '&:hover': {
+                            backgroundColor: '#189945',
+                        },
+                    }}
+                >
+                    +
+                </Button>
+            )}
             {selectedSong && (
                 <>
                     <SongModal
@@ -214,6 +219,7 @@ function SongList() {
                         handleClose={handleCloseModal}
                         song={selectedSong}
                         handleOpenEdit={handleOpenEditModal}
+                        user__id={user__id} // Pasa el user__id como prop
                     />
                     <EditSongModal
                         open={isEditModalOpen}
@@ -228,6 +234,7 @@ function SongList() {
                 open={isAddModalOpen}
                 handleClose={handleCloseAddModal}
                 onSave={handleSaveSong}
+                isAuthenticated={isAuthenticated}
             />
         </div>
     );

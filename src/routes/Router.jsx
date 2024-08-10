@@ -70,34 +70,19 @@ const Router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Navigate to="/login" />,
+                element: <SongList />,
             },
             {
                 path: "login",
                 element: <Login />,
             },
             {
-                path: "songs",
-                element: (
-                    <ProtectedRoute>
-                        <SongList />
-                    </ProtectedRoute>),
-            },
-            {
-                path: "genres",
-                element: <Genres />,
-            },
-            {
-                path: "albums",
-                element: <Albums />,
-            },
-            {
-                path: "playlists",
-                element: <Playlists />,
-            },
-            {
                 path: "artists",
                 element: <Artists />,
+            },
+            {
+                path: "home",
+                element: <Home />,
             },
             {
                 path: "profile",

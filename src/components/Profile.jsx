@@ -8,7 +8,9 @@ function Profile() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const { token, logout } = useAuth("state");
+    const { token } = useAuth("state");
+
+    const { logout } = useAuth("actions");
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_API_BASE_URL}users/profiles/profile_data/`, {
@@ -38,7 +40,7 @@ function Profile() {
     if (error) return <Typography>Error: {error}</Typography>;
 
     return (
-        <Container maxWidth="sm" sx={{ mt: 4 }}>
+        <Container maxWidth="sm" sx={{ mt: 10, }}>
             {userData ? (
                 <Card>
                     <CardContent>
@@ -79,7 +81,7 @@ function Profile() {
                         variant="contained"
                         color="primary"
                         fullWidth
-                        sx={{ mt: 2 }}
+                        sx={{ backgroundColor: '#1FDF64', '&:hover': { backgroundColor: '#189945' } }}
                         onClick={logout}
                     >
                         Cerrar Sesión

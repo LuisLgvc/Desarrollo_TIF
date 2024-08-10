@@ -15,7 +15,11 @@ const style = {
     border: '2px solid #000',
 };
 
-function AddSongModal({ open, handleClose, onSave }) {
+function AddSongModal({ open, handleClose, onSave, isAuthenticated }) {
+    if (!isAuthenticated) {
+        return null;
+    }
+
     const [formData, setFormData] = useState({
         title: '',
         year: '',
@@ -50,12 +54,7 @@ function AddSongModal({ open, handleClose, onSave }) {
                 <IconButton
                     aria-label="close"
                     onClick={handleClose}
-                    sx={{
-                        position: 'absolute',
-                        right: 8,
-                        top: 8,
-                        color: (theme) => theme.palette.grey[500],
-                    }}
+                    sx={{ position: 'absolute', right: 8, top: 8 }}
                 >
                     <CloseIcon />
                 </IconButton>
@@ -70,12 +69,10 @@ function AddSongModal({ open, handleClose, onSave }) {
                         onChange={handleInputChange}
                         fullWidth
                         margin="normal"
-                        required
                     />
                     <TextField
-                        label="Año de lanzamiento"
+                        label="Año"
                         name="year"
-                        type="number"
                         value={formData.year}
                         onChange={handleInputChange}
                         fullWidth
@@ -84,7 +81,6 @@ function AddSongModal({ open, handleClose, onSave }) {
                     <TextField
                         label="Álbum"
                         name="album"
-                        type="number"
                         value={formData.album}
                         onChange={handleInputChange}
                         fullWidth
@@ -93,7 +89,6 @@ function AddSongModal({ open, handleClose, onSave }) {
                     <Button
                         variant="contained"
                         component="label"
-                        // startIcon={<CloudUploadIcon />}
                         fullWidth
                         sx={{ mt: 2 }}
                     >
