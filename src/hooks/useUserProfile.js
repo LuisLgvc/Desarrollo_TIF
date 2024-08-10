@@ -2,17 +2,17 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
 const useUserProfile = () => {
-    const { state } = useAuth("state");
+    const authState = useAuth("state"); // Asegúrate de que useAuth devuelva el estado correctamente.
     const [userData, setUserData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (state.token) {
+        if (authState && authState.token) { // Verifica si authState está disponible y tiene un token.
             fetch(`${import.meta.env.VITE_API_BASE_URL}users/profiles/profile_data/`, {
                 method: "GET",
                 headers: {
-                    Authorization: `Token ${state.token}`,
+                    Authorization: `Token ${authState.token}`,
                 },
             })
                 .then(response => {
@@ -26,11 +26,13 @@ const useUserProfile = () => {
                     setIsLoading(false);
                 })
                 .catch(err => {
-                    setError(err);
+                    setError(err.message);
                     setIsLoading(false);
                 });
+        } else {
+            setIsLoading(false);
         }
-    }, [state.token]);
+    }, [authState]);
 
     return { userData, isLoading, error };
 };

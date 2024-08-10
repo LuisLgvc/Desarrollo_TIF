@@ -6,7 +6,7 @@ function SongCard({ song, onClick }) {
         <Card 
             onClick={onClick} 
             sx={{
-                backgroundColor: 'black',
+                backgroundColor: '#121212',
                 borderRadius: '10px',
                 boxShadow: '0 4px 8px rgba(255, 255, 255, 0.2)',
                 color: 'white',
@@ -27,7 +27,7 @@ function SongCard({ song, onClick }) {
                 alt="Cover"
             />
             <CardContent sx={{ flexGrow: 1 }}>
-                <Typography variant="h6" component="div" color="#7a7a7a">
+                <Typography variant="h5" component="div" color="#7a7a7a">
                     {song.title}
                 </Typography>
             </CardContent>

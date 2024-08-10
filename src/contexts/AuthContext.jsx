@@ -50,7 +50,7 @@ function AuthProvider({ children }) {
             localStorage.setItem("Token", encryptedToken);
             localStorage.setItem("user__id", user__id);
             
-            navigate("/home");
+            navigate("/");
         },
         logout: () => {
             dispatch({ type: ACTIONS.LOGOUT });

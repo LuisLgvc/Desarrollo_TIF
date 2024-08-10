@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Button } from '@mui/material';
+import useFetchSongs from '../../hooks/UseFetchSongs';
 import SongCard from './SongCard';
 import SongModal from './SongModal';
 import EditSongModal from './EditSongModal';
@@ -9,84 +10,29 @@ import { useAuth } from '../../contexts/AuthContext';
 
 function SongList() {
     const { token, user__id, isAuthenticated } = useAuth("state");
-
-
-    const [songs, setSongs] = useState([]);
     const [page, setPage] = useState(1);
     const [filters, setFilters] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
-    const [nextUrl, setNextUrl] = useState(null);
     const [selectedSong, setSelectedSong] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
 
-    const doFetch = async () => {
-        setIsLoading(true);
-        let query = new URLSearchParams({
-            page: page,
-            page_size: 15,
-            ordering: `-created_at`,
-            ...filters,
-        }).toString();
-
-        try {
-            const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}harmonyhub/songs/?${query}`
-            );
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            if (data.results) {
-                setSongs((prevSongs) => [...prevSongs, ...data.results]);
-                setNextUrl(data.next);
-            }
-        } catch (error) {
-            console.error("Error fetching songs:", error);
-            setIsError(true);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const fetchArtistName = async (artistId) => {
-        if (artistId) {
-            try {
-                const response = await fetch(
-                    `${import.meta.env.VITE_API_BASE_URL}harmonyhub/artists/${artistId}/`
-                );
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const artistData = await response.json();
-                return artistData.name;
-            } catch (error) {
-                console.error("Error fetching artist:", error);
-            }
-        }
-    };
+    const { songs, isLoading, isError, nextUrl, setSongs } = useFetchSongs(page, filters);
 
     const handleLoadMore = () => {
         if (nextUrl) {
-            setPage((prevPage) => prevPage + 1);
+            setPage(prevPage => prevPage + 1);
         }
     };
 
     const handleSongClick = async (song) => {
-        const artistId = song.artists[0]; // Asumiendo que el primer ID en el array es el ID del artista principal
-        const artistName = await fetchArtistName(artistId);
-        song.artistName = artistName; // Añadir el nombre del artista a la canción
-        setSelectedSong(song);
-        setIsModalOpen(true);
-        console.log(`id ${song.id} owner: ${song.owner} user__id: ${user__id}`);
+        try {
+            setSelectedSong(song);
+            setIsModalOpen(true);
+        } catch (error) {
+            console.error('Error fetching artist name:', error);
+        }
     };
 
     const handleCloseModal = () => {
@@ -104,10 +50,7 @@ function SongList() {
     };
 
     const handleAddSongClick = () => {
-        const id = user__id;
-        console.log("user_id:", id);
-        console.log(token);
-        setSelectedSong(null); // Limpiar la canción seleccionada al agregar una nueva
+        setSelectedSong(null);
         setIsAddModalOpen(true);
     };
 
@@ -123,19 +66,19 @@ function SongList() {
             },
             body: newForm,
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al guardar la canción');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setSongs([data, ...songs]);
-                handleCloseAddModal();
-            })
-            .catch(error => {
-                console.error('Error saving song:', error);
-            });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al guardar la canción');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setSongs([data, ...songs]);
+            handleCloseAddModal();
+        })
+        .catch(error => {
+            console.error('Error saving song:', error);
+        });
     };
 
     const handleUpdateSong = (updatedForm) => {
@@ -152,21 +95,20 @@ function SongList() {
             },
             body: updatedForm,
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al actualizar la canción');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Actualiza la lista de canciones con la canción actualizada
-                const updatedSongs = songs.map(song => song.id === data.id ? data : song);
-                setSongs(updatedSongs);
-                handleCloseEditModal();
-            })
-            .catch(error => {
-                console.error('Error updating song:', error);
-            });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al actualizar la canción');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const updatedSongs = songs.map(song => song.id === data.id ? data : song);
+            setSongs(updatedSongs);
+            handleCloseEditModal();
+        })
+        .catch(error => {
+            console.error('Error updating song:', error);
+        });
     };
 
     const handleDeleteSong = async () => {
@@ -202,10 +144,6 @@ function SongList() {
     const handleCloseConfirmDeleteModal = () => {
         setIsConfirmDeleteModalOpen(false);
     };
-
-    useEffect(() => {
-        doFetch();
-    }, [page, filters]);
 
     return (
         <div style={{ margin: '20px' }}>
@@ -283,5 +221,3 @@ function SongList() {
 }
 
 export default SongList;
-
-
