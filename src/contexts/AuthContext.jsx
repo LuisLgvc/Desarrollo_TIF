@@ -123,8 +123,8 @@ function reducer(state, action) {
 
 function AuthProvider({ children }) {
     const [state, dispatch] = useReducer(reducer, {
-        token: localStorage.getItem("Token"),
-        user__id: localStorage.getItem("user__id"),
+        token: decrypt(localStorage.getItem("Token")),
+        user__id: decrypt(localStorage.getItem("user__id")),
         isAuthenticated: !!localStorage.getItem("Token"),
     });
     const navigate = useNavigate();
@@ -168,9 +168,16 @@ function useAuth(type) {
     return context[type];
 }
 
-// Using SHA-256 for hashing
 function encrypt(param) {
-    return CryptoJS.SHA256(param).toString();
+    const secretKey = import.meta.env.SECRET_KEY || "default_secret_key";
+    return CryptoJS.AES.encrypt(param, secretKey).toString();
+}
+
+function decrypt(param) {
+    if (!param) return null;
+    const secretKey = import.meta.env.SECRET_KEY || "default_secret_key";
+    const bytes = CryptoJS.AES.decrypt(param, secretKey);
+    return bytes.toString(CryptoJS.enc.Utf8);
 }
 
 export { AuthContext, AuthProvider, useAuth };
