@@ -4,6 +4,7 @@ import SongCard from './SongCard';
 import SongModal from './SongModal';
 import EditSongModal from './EditSongModal';
 import AddSongModal from './AddSongModal';
+import DeleteSongModal from './DeleteSongModal';
 import { useAuth } from '../../contexts/AuthContext';
 
 function SongList() {
@@ -20,6 +21,7 @@ function SongList() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
 
     const doFetch = async () => {
         setIsLoading(true);
@@ -167,6 +169,40 @@ function SongList() {
             });
     };
 
+    const handleDeleteSong = async () => {
+        if (!selectedSong) return;
+
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_API_BASE_URL}/harmonyhub/songs/${selectedSong.id}/`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Token ${token}`,
+                    },
+                }
+            );
+
+            if (response.ok) {
+                setSongs(songs.filter(song => song.id !== selectedSong.id));
+                setIsConfirmDeleteModalOpen(false);
+                setIsModalOpen(false);
+            } else {
+                console.error("Error al eliminar la canción");
+            }
+        } catch (error) {
+            console.error("Error al eliminar la canción", error);
+        }
+    };
+
+    const handleOpenConfirmDeleteModal = () => {
+        setIsConfirmDeleteModalOpen(true);
+    };
+
+    const handleCloseConfirmDeleteModal = () => {
+        setIsConfirmDeleteModalOpen(false);
+    };
+
     useEffect(() => {
         doFetch();
     }, [page, filters]);
@@ -219,7 +255,8 @@ function SongList() {
                         handleClose={handleCloseModal}
                         song={selectedSong}
                         handleOpenEdit={handleOpenEditModal}
-                        user__id={user__id} // Pasa el user__id como prop
+                        handleDelete={handleOpenConfirmDeleteModal}
+                        user__id={user__id}
                     />
                     <EditSongModal
                         open={isEditModalOpen}
@@ -227,6 +264,11 @@ function SongList() {
                         song={selectedSong}
                         token={token}
                         onSave={handleUpdateSong}
+                    />
+                    <DeleteSongModal
+                        open={isConfirmDeleteModalOpen}
+                        handleClose={handleCloseConfirmDeleteModal}
+                        handleConfirm={handleDeleteSong}
                     />
                 </>
             )}

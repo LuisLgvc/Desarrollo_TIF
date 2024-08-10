@@ -64,6 +64,7 @@ function AddSongModal({ open, handleClose, onSave, isAuthenticated }) {
                 <form onSubmit={handleSubmit}>
                     <TextField
                         label="Título"
+                        required
                         name="title"
                         value={formData.title}
                         onChange={handleInputChange}
