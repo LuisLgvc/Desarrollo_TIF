@@ -62,6 +62,7 @@ import Login from "../components/Authentication/Login";
 import Profile from "../components/Profile";
 import Layout from "./Layout";
 import SongList from "../components/MusicPlayer/SongList";
+import NotFound from "../components/NotFound";
 import ProtectedRoute from "./ProtectedRoute";
 
 const Router = createBrowserRouter([
@@ -95,7 +96,7 @@ const Router = createBrowserRouter([
     },
     {
         path: "*",
-        element: <h1>Not Found</h1>,
+        element: <NotFound />,
     },
 ]);
 
