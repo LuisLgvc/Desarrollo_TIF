@@ -51,16 +51,18 @@ const Router = createBrowserRouter([
 export { Router };
  */
 
-import { createBrowserRouter } from "react-router-dom";
-/* import Home from "../components/Home"; */
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import Home from "../components/Home";
 import Songs from "../components/Songs";
 import Genres from "../components/Genres";
 import Albums from "../components/Albums";
 import Artists from "../components/Artists";
 import Playlists from "../components/Playlists";
 import Login from "../components/Authentication/Login";
+import Profile from "../components/Profile";
 import Layout from "./Layout";
 import SongList from "../components/MusicPlayer/SongList";
+import ProtectedRoute from "./ProtectedRoute";
 
 const Router = createBrowserRouter([
     {
@@ -68,16 +70,19 @@ const Router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <SongList />,
+                element: <Navigate to="/login" />,
             },
             {
                 path: "login",
                 element: <Login />,
             },
-            /* {
+            {
                 path: "songs",
-                element: <SongList />,
-            }, */
+                element: (
+                    <ProtectedRoute>
+                        <SongList />
+                    </ProtectedRoute>),
+            },
             {
                 path: "genres",
                 element: <Genres />,
@@ -93,6 +98,13 @@ const Router = createBrowserRouter([
             {
                 path: "artists",
                 element: <Artists />,
+            },
+            {
+                path: "profile",
+                element: (
+                    <ProtectedRoute>
+                        <Profile />
+                    </ProtectedRoute>),
             }
         ],
     },

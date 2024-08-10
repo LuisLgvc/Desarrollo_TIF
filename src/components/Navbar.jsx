@@ -11,9 +11,9 @@
 //     const location = useLocation();
 
 //     // No mostrar el Navbar en la ruta de login
-//     if (location.pathname === '/login') {
-//         return null;
-//     }
+    // if (location.pathname === '/login') {
+    //     return null;
+    // }
 
 //     return (
 //         <AppBar position="static">
@@ -143,7 +143,13 @@ function Navbar() {
         <AppBar position="static">
             <Toolbar>
                 <Typography variant="h6">
-                    <Link to="/">Home</Link>
+                    <Link to="/songs">Home</Link>
+                </Typography>
+                <Typography variant="h6">
+                    <Link to="/albums">Albums</Link>
+                </Typography>
+                <Typography variant="h6">
+                    <Link to="/profile">Playlists</Link>
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginLeft: 'auto' }}>
                     <Button

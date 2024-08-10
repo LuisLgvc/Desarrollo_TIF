@@ -1,5 +1,6 @@
 // import { createContext, useReducer, useContext } from "react";
 // import { useLocation, useNavigate } from "react-router-dom";
+// import CryptoJS from "crypto-js";
 
 // const AuthContext = createContext();
 
@@ -14,6 +15,7 @@
 //             return {
 //                 ...state,
 //                 token: action.payload,
+//                 user__id: action.payload,
 //                 isAuthenticated: true,
 //             };
 //         case ACTIONS.LOGOUT:
@@ -29,22 +31,32 @@
 
 // function AuthProvider({ children }) {
 //     const [state, dispatch] = useReducer(reducer, {
-//         token: localStorage.getItem("authToken"),
-//         isAuthenticated: !!localStorage.getItem("authToken"),
+//         token: decrypt(localStorage.getItem("authToken")),
+//         user__id: decrypt(localStorage.getItem("user__id")),
+//         isAuthenticated: !!localStorage.getItem("authToken") ? true : false,
 //     });
 //     const navigate = useNavigate();
 //     const location = useLocation();
 
 //     const actions = {
-//         login: (token) => {
-//             dispatch({ type: ACTIONS.LOGIN, payload: token });
-//             localStorage.setItem("authToken", token);
-//             const origin = location.state?.from?.pathname || "/";
+//         login: (token, user__id) => {
+//             dispatch({
+//                 type: ACTIONS.LOGIN,
+//                 payload: { token, user__id }
+//             });
+//             const encryptedToken = encrypt(token)
+//             localStorage.setItem("Token", encryptedToken);
+
+//             const encryptedUser__id = encrypt(user__id);;
+//             localStorage.setItem("user__id", encryptedUser__id);
+
+//             const origin = location.state?.from?.pathname || "/songs"; // despues podes borrar esto
 //             navigate(origin);
 //         },
 //         logout: () => {
 //             dispatch({ type: ACTIONS.LOGOUT });
-//             localStorage.removeItem("authToken");
+//             localStorage.removeItem("Token");
+//             localStorage.removeItem("user__id");
 //         },
 //     };
 
@@ -61,6 +73,18 @@
 //         throw new Error("useAuth must be used within an AuthProvider");
 //     }
 //     return context[type];
+// }
+
+// function encrypt(param) {
+//     const secretKey = import.meta.env.SECRET_KEY || "default_secret_key";
+//     return CryptoJS.AES.encrypt(param, secretKey).toString();
+// }
+
+// function decrypt(param) {
+//     if (!param) return null;
+//     const secretKey = import.meta.env.SECRET_KEY || "default_secret_key";
+//     const bytes = CryptoJS.AES.decrypt(param, secretKey);
+//     return bytes.toString(CryptoJS.enc.Utf8);
 // }
 
 // export { AuthContext, AuthProvider, useAuth };
@@ -81,13 +105,15 @@ function reducer(state, action) {
         case ACTIONS.LOGIN:
             return {
                 ...state,
-                token: action.payload,
+                token: action.payload.token,
+                user__id: action.payload.user__id,
                 isAuthenticated: true,
             };
         case ACTIONS.LOGOUT:
             return {
                 ...state,
                 token: null,
+                user__id: null,
                 isAuthenticated: false,
             };
         default:
@@ -97,23 +123,33 @@ function reducer(state, action) {
 
 function AuthProvider({ children }) {
     const [state, dispatch] = useReducer(reducer, {
-        token: decryptToken(localStorage.getItem("authToken")),
-        isAuthenticated: !!localStorage.getItem("authToken"),
+        token: localStorage.getItem("Token"),
+        user__id: localStorage.getItem("user__id"),
+        isAuthenticated: !!localStorage.getItem("Token"),
     });
     const navigate = useNavigate();
     const location = useLocation();
 
     const actions = {
-        login: (token) => {
-            const encryptedToken = encryptToken(token);
-            dispatch({ type: ACTIONS.LOGIN, payload: encryptedToken });
+        login: (token, user__id) => {
+            const encryptedToken = encrypt(token);
+            const encryptedUser__id = encrypt(user__id);
+
             localStorage.setItem("Token", encryptedToken);
-            const origin = location.state?.from?.pathname || "/";
+            localStorage.setItem("user__id", encryptedUser__id);
+
+            dispatch({
+                type: ACTIONS.LOGIN,
+                payload: { token, user__id },
+            });
+
+            const origin = location.state?.from?.pathname || "/songs";
             navigate(origin);
         },
         logout: () => {
-            dispatch({ type: ACTIONS.LOGOUT });
             localStorage.removeItem("Token");
+            localStorage.removeItem("user__id");
+            dispatch({ type: ACTIONS.LOGOUT });
         },
     };
 
@@ -132,16 +168,9 @@ function useAuth(type) {
     return context[type];
 }
 
-function encryptToken(token) {
-    const secretKey = import.meta.env.SECRET_KEY || "default_secret_key";
-    return CryptoJS.AES.encrypt(token, secretKey).toString();
-}
-
-function decryptToken(encryptedToken) {
-    if (!encryptedToken) return null;
-    const secretKey = import.meta.env.SECRET_KEY || "default_secret_key";
-    const bytes = CryptoJS.AES.decrypt(encryptedToken, secretKey);
-    return bytes.toString(CryptoJS.enc.Utf8);
+// Using SHA-256 for hashing
+function encrypt(param) {
+    return CryptoJS.SHA256(param).toString();
 }
 
 export { AuthContext, AuthProvider, useAuth };
