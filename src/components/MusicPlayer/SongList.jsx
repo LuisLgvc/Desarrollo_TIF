@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Button } from '@mui/material';
 import useFetchSongs from '../../hooks/UseFetchSongs';
+import useUpdateSong from '../../hooks/UseUpdateSong';
+import useAddSong from '../../hooks/UseAddSong';
+import useDeleteSong from '../../hooks/UseDeleteSong';
 import SongCard from './SongCard';
 import SongModal from './SongModal';
 import EditSongModal from './EditSongModal';
@@ -19,6 +22,10 @@ function SongList() {
     const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
 
     const { songs, isLoading, isError, nextUrl, setSongs } = useFetchSongs(page, filters);
+    
+    const { addSong } = useAddSong(token, setSongs);
+    const { updateSong } = useUpdateSong(token, setSongs);
+    const { deleteSong } = useDeleteSong(token, setSongs);
 
     const handleLoadMore = () => {
         if (nextUrl) {
@@ -59,82 +66,20 @@ function SongList() {
     };
 
     const handleSaveSong = (newForm) => {
-        fetch(`${import.meta.env.VITE_API_BASE_URL}harmonyhub/songs/`, {
-            method: 'POST',
-            headers: {
-                Authorization: `Token ${token}`,
-            },
-            body: newForm,
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al guardar la canción');
-            }
-            return response.json();
-        })
-        .then(data => {
-            setSongs([data, ...songs]);
-            handleCloseAddModal();
-        })
-        .catch(error => {
-            console.error('Error saving song:', error);
-        });
+        addSong(newForm);
+        handleCloseAddModal();
     };
 
     const handleUpdateSong = (updatedForm) => {
-        if (!updatedForm.has('id')) {
-            updatedForm.append('id', selectedSong.id);
-        }
-
-        const songId = updatedForm.get('id');
-
-        fetch(`${import.meta.env.VITE_API_BASE_URL}harmonyhub/songs/${songId}/`, {
-            method: 'PATCH',
-            headers: {
-                Authorization: `Token ${token}`,
-            },
-            body: updatedForm,
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al actualizar la canción');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const updatedSongs = songs.map(song => song.id === data.id ? data : song);
-            setSongs(updatedSongs);
-            handleCloseEditModal();
-        })
-        .catch(error => {
-            console.error('Error updating song:', error);
-        });
+        updateSong(updatedForm);
+        handleCloseEditModal();
     };
 
     const handleDeleteSong = async () => {
         if (!selectedSong) return;
-
-        try {
-            const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/harmonyhub/songs/${selectedSong.id}/`,
-                {
-                    method: "DELETE",
-                    headers: {
-                        Authorization: `Token ${token}`,
-                    },
-                }
-            );
-
-            if (response.ok) {
-                setSongs(songs.filter(song => song.id !== selectedSong.id));
-                setIsConfirmDeleteModalOpen(false);
-                setIsModalOpen(false);
-            } else {
-                console.error("Error al eliminar la canción");
-            }
-        } catch (error) {
-            console.error("Error al eliminar la canción", error);
-        }
+        await deleteSong(selectedSong.id);
+        setIsConfirmDeleteModalOpen(false);
+        setIsModalOpen(false);
     };
 
     const handleOpenConfirmDeleteModal = () => {
