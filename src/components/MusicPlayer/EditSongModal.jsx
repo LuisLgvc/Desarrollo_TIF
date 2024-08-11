@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, IconButton, TextField, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
@@ -29,7 +29,8 @@ const style = {
     border: '2px solid #000',
 };
 
-function EditSongModal({ open, handleClose, song, token, onSave }) {
+// Modal para editar una canción
+function EditSongModal({ open, handleClose, song, onSave }) {
     const [formData, setFormData] = useState({
         id: song.id,
         title: song.title,
@@ -40,6 +41,22 @@ function EditSongModal({ open, handleClose, song, token, onSave }) {
     });
     const [imageFile, setImageFile] = useState(null);
     const [songFile, setSongFile] = useState(null);
+
+    // Este efecto se realiza cuando el modal se abre o se cierra
+    useEffect(() => {
+        if (!open) {
+            setFormData({
+                id: song.id,
+                title: song.title,
+                year: song.year,
+                song_file: song.song_file,
+                owner: song.owner,
+                cover: song.cover,
+            });
+            setImageFile(null);
+            setSongFile(null);
+        }
+    }, [open, song]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
