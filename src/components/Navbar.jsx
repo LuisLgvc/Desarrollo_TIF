@@ -19,8 +19,11 @@ function Navbar() {
             case '/':
                 setValue(0);
                 break;
-            case '/artists':
+            case '/albums':
                 setValue(1);
+                break;
+            case '/artists':
+                setValue(2);
                 break;
             case '/profile':
                 setValue(null); // Ninguna pestaña seleccionada cuando está en perfil
@@ -37,6 +40,9 @@ function Navbar() {
                 navigate("/");
                 break;
             case 1:
+                navigate("/albums");
+                break;
+            case 2:
                 navigate("/artists");
                 break;
             default:
@@ -57,6 +63,7 @@ function Navbar() {
             <Toolbar>
                 <Tabs value={value} onChange={handleChange} textColor="inherit" indicatorColor="primary">
                     <Tab label="Canciones" sx={{ color: '#FFFFFF' }} />
+                    <Tab label="Albums" sx={{ color: '#FFFFFF' }} />
                     <Tab label="Artistas" sx={{ color: '#FFFFFF' }} />
                 </Tabs>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginLeft: 'auto' }}>

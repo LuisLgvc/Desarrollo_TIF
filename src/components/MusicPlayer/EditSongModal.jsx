@@ -36,7 +36,9 @@ function EditSongModal({ open, handleClose, song, token, onSave }) {
         year: song.year,
         song_file: song.song_file,
         owner: song.owner,
+        cover: song.cover,
     });
+    const [imageFile, setImageFile] = useState(null);
     const [songFile, setSongFile] = useState(null);
 
     const handleInputChange = (e) => {
@@ -44,8 +46,13 @@ function EditSongModal({ open, handleClose, song, token, onSave }) {
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    const handleFileChange = (e) => {
-        setSongFile(e.target.files[0]);
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (event.target.accept.includes('image/*')) {
+            setImageFile(file);
+        } else if (event.target.accept.includes('audio/*')) {
+            setSongFile(file);
+        }
     };
 
     const handleSubmit = (e) => {
@@ -55,6 +62,9 @@ function EditSongModal({ open, handleClose, song, token, onSave }) {
         updatedForm.append('title', formData.title);
         updatedForm.append('year', formData.year);
         updatedForm.append('owner', formData.owner);
+        if (imageFile) {
+            updatedForm.append('cover', imageFile);
+        }
         if (songFile) {
             updatedForm.append('song_file', songFile);
         }
@@ -78,8 +88,24 @@ function EditSongModal({ open, handleClose, song, token, onSave }) {
                     <CloseIcon />
                 </IconButton>
                 <Typography variant="h6" component="h2">
-                    Editar Canción
+                    Editar Imagen
                 </Typography>
+                <Button
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}
+                    startIcon={<CloudUploadIcon />}
+                    onChange={handleFileChange}
+                >
+                    Elegir imagen
+                    <VisuallyHiddenInput type="file" accept="image/*"/>
+                </Button>
+                {imageFile && (
+                    <Typography variant="body2" sx={{ mt: 2 }}>
+                        Imagen seleccionada: {imageFile.name}
+                    </Typography>
+                )}
                 <TextField
                     margin="normal"
                     required
@@ -92,7 +118,6 @@ function EditSongModal({ open, handleClose, song, token, onSave }) {
                 />
                 <TextField
                     margin="normal"
-                    required
                     fullWidth
                     id="year"
                     label="Año"
@@ -100,20 +125,6 @@ function EditSongModal({ open, handleClose, song, token, onSave }) {
                     value={formData.year}
                     onChange={handleInputChange}
                 />
-                {/* <Button
-                    variant="contained"
-                    component="label"
-                    fullWidth
-                    sx={{ mt: 2 }}
-                >
-                    Subir Archivo de Canción
-                    <input
-                        type="file"
-                        hidden
-                        accept="audio/*"
-                        onChange={handleFileChange}
-                    />
-                </Button> */}
                 <Button
                     component="label"
                     role={undefined}

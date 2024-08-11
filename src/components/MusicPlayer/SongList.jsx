@@ -22,7 +22,7 @@ function SongList() {
     const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
 
     const { songs, isLoading, isError, nextUrl, setSongs } = useFetchSongs(page, filters);
-    
+
     const { addSong } = useAddSong(token, setSongs);
     const { updateSong } = useUpdateSong(token, setSongs);
     const { deleteSong } = useDeleteSong(token, setSongs);
