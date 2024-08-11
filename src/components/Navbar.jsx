@@ -65,6 +65,8 @@ function Navbar() {
                     <Tab label="Canciones" sx={{ color: '#FFFFFF' }} />
                     <Tab label="Albums" sx={{ color: '#FFFFFF' }} />
                     <Tab label="Artistas" sx={{ color: '#FFFFFF' }} />
+                    <Tab label="Generos" sx={{ color: '#FFFFFF' }} disabled />
+                    <Tab label="Playlists" sx={{ color: '#FFFFFF' }} disabled />
                 </Tabs>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginLeft: 'auto' }}>
                     {isAuthenticated ? (
