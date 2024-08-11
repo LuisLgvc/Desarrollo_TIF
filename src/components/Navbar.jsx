@@ -1,16 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Box, Button, Tabs, Tab, Menu, MenuItem, InputBase } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { AppBar, Toolbar, Box, Button, Tabs, Tab, Menu, MenuItem } from '@mui/material';
 
-function Navbar({ onSearch }) {
+function Navbar() {
     const { isAuthenticated } = useAuth("state");
     const navigate = useNavigate();
+    const location = useLocation(); // Obtener la ubicación actual
     const [value, setValue] = useState(0);
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
     const { logout } = useAuth("actions");
+
+    // Sincronizar la pestaña seleccionada con la ruta actual
+    useEffect(() => {
+        switch (location.pathname) {
+            case '/':
+                setValue(0);
+                break;
+            case '/artists':
+                setValue(1);
+                break;
+            case '/profile':
+                setValue(null); // Ninguna pestaña seleccionada cuando está en perfil
+                break;
+            default:
+                break;
+        }
+    }, [location.pathname]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -20,15 +38,6 @@ function Navbar({ onSearch }) {
                 break;
             case 1:
                 navigate("/artists");
-                break;
-            case 2:
-                navigate("/albums");
-                break;
-            case 3:
-                navigate("/playlists");
-                break;
-            case 4:
-                navigate("/generos");
                 break;
             default:
                 break;
@@ -49,9 +58,6 @@ function Navbar({ onSearch }) {
                 <Tabs value={value} onChange={handleChange} textColor="inherit" indicatorColor="primary">
                     <Tab label="Canciones" sx={{ color: '#FFFFFF' }} />
                     <Tab label="Artistas" sx={{ color: '#FFFFFF' }} />
-                    <Tab label="Albums" sx={{ color: '#FFFFFF' }} />
-                    <Tab label="Playlists" sx={{ color: '#FFFFFF' }} />
-                    <Tab label="Generos" sx={{ color: '#FFFFFF' }} />
                 </Tabs>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginLeft: 'auto' }}>
                     {isAuthenticated ? (
