@@ -22,32 +22,32 @@ Spotix es una aplicacion web que permite a los usuarios buscar y escuchar musica
 ## Vistas
 
 - Vista Principal
-![Vista Principal](https://postimg.cc/v4YChY6H)
+[![Principal.png](https://i.postimg.cc/fRmZwkzX/Principal.png)](https://postimg.cc/v4YChY6H)
 
 - Vista Albums
-![Vista Albums](https://postimg.cc/75qrR1j4)
+[![Albums.png](https://i.postimg.cc/Gmy3HqQ4/Albums.png)](https://postimg.cc/75qrR1j4)
 
 - Vista Artistas
-![Vista Artistas](https://postimg.cc/nXTffjtD)
+[![Artistas.png](https://i.postimg.cc/BvfSDHYM/Artistas.png)](https://postimg.cc/nXTffjtD)
 
 - Vista Detalles
-![Vista Detalles](https://postimg.cc/SXsFSSyt)
+[![Detalles.png](https://i.postimg.cc/xdG0P8BY/Detalles.png)](https://postimg.cc/SXsFSSyt)
 
 - Vista Detalles con Permisos
-![Vista Detalles con Permisos](https://postimg.cc/CZQyd35M)
+[![Detalles-con-permisos.png](https://i.postimg.cc/W32sYjPZ/Detalles-con-permisos.png)](https://postimg.cc/CZQyd35M)
 
 - Vista Edicion
-![Vista Edicion](https://postimg.cc/gXXChgLV)
+[![Edicion.png](https://i.postimg.cc/Px2TBctR/Edicion.png)](https://postimg.cc/gXXChgLV)
 
 - Vista Eliminacion
-![Vista Eliminacion](https://postimg.cc/wRDnf3V3)
+[![Eliminacion.png](https://i.postimg.cc/J0FmhkH3/Eliminacion.png)](https://postimg.cc/wRDnf3V3)
 
 - Vista Agregado
-![Vista Agregado](https://postimg.cc/ykmznpQn)
+[![Agregado.png](https://i.postimg.cc/zXMXz9nm/Agregado.png)](https://postimg.cc/ykmznpQn)
 
 - Vista Perfil
-![Vista Perfil](https://postimg.cc/w7cSDyMG)
+[![Perfil.png](https://i.postimg.cc/BQd49204/Perfil.png)](https://postimg.cc/w7cSDyMG)
 
 - Vista No Encontrado
-![Vista No Encontrado](https://postimg.cc/5YhZS88Z)
+[![NotFound.png](https://i.postimg.cc/KjjxFNjv/NotFound.png)](https://postimg.cc/5YhZS88Z)
 
