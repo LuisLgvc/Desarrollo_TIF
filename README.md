@@ -43,10 +43,10 @@ Spotix es una aplicacion web que permite a los usuarios buscar y escuchar musica
 [![Editar.png](https://i.postimg.cc/Hnz6d514/Editar.png)](https://postimg.cc/gLwVKxJn)
 
 ### Vista Eliminacion
-[![Eliminar.png](https://i.postimg.cc/bY9CxXSD/Eliminar.png)](https://postimg.cc/kDDvCpcq)s
+[![Eliminar.png](https://i.postimg.cc/bY9CxXSD/Eliminar.png)](https://postimg.cc/kDDvCpcq)
 
 ### Vista Agregado
-[url=https://postimg.cc/4YR6zNTx][img]https://i.postimg.cc/4YR6zNTx/Agregar-Cancion.png[/img][/url]
+[![Agregar-Cancion.png](https://i.postimg.cc/3xdtQdSm/Agregar-Cancion.png)](https://postimg.cc/4YR6zNTx)
 
 ### Vista Perfil
 [![Perfil.png](https://i.postimg.cc/dtW5f8BJ/Perfil.png)](https://postimg.cc/F7Lbdk86)
