@@ -1,4 +1,5 @@
 import { createBrowserRouter} from "react-router-dom";
+import MySongs from "../components/MusicPlayer/MySongs";
 import Albums from "../components/Albums/Albums";
 import Login from "../components/Authentication/Login";
 import ArtistList from "../components/Artists/ArtistList";
@@ -19,6 +20,10 @@ const Router = createBrowserRouter([
             {
                 path: "login",
                 element: <Login />,
+            },
+            {
+                path: "mysongs",
+                element: <MySongs />,
             },
             {
                 path: "albums",

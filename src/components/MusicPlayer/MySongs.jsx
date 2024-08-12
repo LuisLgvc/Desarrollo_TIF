@@ -1,24 +1,24 @@
 import React from 'react';
 import BaseSongList from './BaseSongList';
-import useFetchSongs from '../../hooks/UseFetchSongs';
+import useFetchUserSongs from '../../hooks/useFetchUserSongs';
 import useAddSong from '../../hooks/UseAddSong';
 import useUpdateSong from '../../hooks/UseUpdateSong';
 import useDeleteSong from '../../hooks/UseDeleteSong';
 import { useAuth } from '../../contexts/AuthContext';
 
-function SongList() {
-    const { isAuthenticated } = useAuth("state");
+function MySongs() {
+    const isAuthenticated = useAuth("state");
 
     return (
         <BaseSongList
-            useFetchSongs={useFetchSongs}
+            useFetchSongs={useFetchUserSongs}
             useAddSong={useAddSong}
             useUpdateSong={useUpdateSong}
             useDeleteSong={useDeleteSong}
             isAuthenticated={isAuthenticated}
-            noSongsMessage="No se encontraron canciones."
+            noSongsMessage="No hay canciones aún."
         />
     );
 }
 
-export default SongList;
+export default MySongs;
